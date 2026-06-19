@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookGuard &mdash; Developer Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
+  :root {
+    --bg:#f7f8fa;--surface:#fff;--surface-2:#f0f2f6;--border:#dde1ea;
+    --accent:#2a5ccc;--accent-dim:rgba(42,92,204,0.08);
+    --amber:#b86c00;--amber-bg:#fff8ed;--amber-border:#f0c070;
+    --red:#c0392b;--red-bg:#fff5f5;--red-border:#f5b8b8;
+    --green:#1a7a4a;--green-bg:#f0faf4;--green-border:#a0d8b8;
+    --blue-bg:#f0f5ff;--blue-border:#b0c8f8;
+    --text:#1a1f2e;--text-muted:#4a5270;--text-dim:#8a92a8;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;--display:'Syne',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.7}
+  .layout{display:flex;min-height:100vh}
+  nav{width:230px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:32px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .nav-logo{font-family:var(--display);font-size:17px;font-weight:800;color:var(--text);padding:0 24px 28px;letter-spacing:-0.3px;border-bottom:1px solid var(--border);margin-bottom:20px}
+  .nav-logo span{color:var(--accent)}
+  .nav-section{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;padding:14px 24px 6px}
+  nav a{display:block;padding:7px 24px;color:var(--text-muted);text-decoration:none;font-size:13px;transition:color .15s,background .15s;border-left:2px solid transparent}
+  nav a:hover{color:var(--accent);background:var(--accent-dim);border-left-color:var(--accent)}
+  main{flex:1;max-width:860px;padding:56px 56px 100px}
+  .doc-header{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+  .doc-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .doc-title{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{color:var(--text-muted);font-size:15px;max-width:560px;line-height:1.6}
+  .meta-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .meta-pill{font-family:var(--mono);font-size:11px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:4px 10px;color:var(--text-muted)}
+  section{margin-bottom:64px}
+  h2{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.4px;color:var(--text);margin-bottom:6px;padding-top:8px}
+  .section-rule{height:2px;background:linear-gradient(to right,var(--accent),transparent);margin-bottom:24px;border-radius:2px;opacity:.35}
+  h3{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px}
+  p{color:var(--text-muted);margin-bottom:12px}
+  .callout{border-radius:6px;padding:14px 18px;margin:16px 0;font-size:13px;line-height:1.6;border-left:3px solid}
+  .callout-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+  .callout-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+  .callout-blue{background:var(--blue-bg);border-color:var(--blue-border);color:var(--accent)}
+  .callout strong{font-weight:600;display:block;margin-bottom:4px;color:inherit}
+  .table-wrap{overflow-x:auto;margin:16px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:var(--surface-2);color:var(--text-muted);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--accent-dim)}
+  .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.04em}
+  .badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+  .badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+  .badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+  code{font-family:var(--mono);font-size:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:3px;padding:1px 6px;color:var(--accent)}
+  .phase-list{margin:0;padding:0;list-style:none}
+  .phase{display:flex;gap:16px;margin-bottom:4px;position:relative}
+  .phase:not(:last-child)::before{content:'';position:absolute;left:15px;top:32px;bottom:-4px;width:1px;background:var(--border)}
+  .phase-num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);margin-top:2px}
+  .phase-body{padding:2px 0 20px;flex:1}
+  .phase-title{font-weight:600;color:var(--text);font-size:14px;margin-bottom:4px}
+  .phase-desc{color:var(--text-muted);font-size:13px}
+  .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .pain-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px}
+  .pain-card .label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:6px}
+  .pain-card p{font-size:13px;color:var(--text-muted);margin:0;line-height:1.5}
+  .missing-list{list-style:none;padding:0;margin:12px 0}
+  .missing-list li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:13px}
+  .missing-list li:last-child{border-bottom:none}
+  .missing-list li::before{content:'x';color:var(--red);font-size:11px;font-weight:700;margin-top:3px;flex-shrink:0}
+  .issues-list{list-style:none;padding:0;margin:12px 0}
+  .issues-list li{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .issues-list li:last-child{border-bottom:none}
+  .issue-tag{flex-shrink:0;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px;margin-top:2px;white-space:nowrap}
+  .issue-tag-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+  .issue-tag-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+  .issue-body{color:var(--text-muted);line-height:1.6}
+  .issue-body strong{color:var(--text);font-weight:600;display:block;margin-bottom:4px}
+  @media(max-width:700px){nav{display:none}main{padding:32px 20px 80px}.pain-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <div class="nav-logo">Book<span>Guard</span> Docs</div>
+    <div class="nav-section">Overview</div>
+    <a href="#overview">System Overview</a>
+    <div class="nav-section">Workflow</div>
+    <a href="#workflow">End-to-End Flow</a>
+    <a href="#automations">Automations</a>
+    <a href="#forms">Forms &amp; Data</a>
+    <div class="nav-section">Infrastructure</div>
+    <a href="#tech">Technical Stack</a>
+    <a href="#domain">Domain Config</a>
+    <div class="nav-section">Build Brief</div>
+    <a href="#pain">Pain Points</a>
+    <a href="#gaps">What's Missing</a>
+    <a href="#issues">Known System Issues</a>
+  </nav>
+  <main>
+    <div class="doc-header">
+      <div class="doc-eyebrow">Developer Reference &mdash; Confidential</div>
+      <div class="doc-title">BookGuard System<br>Documentation</div>
+      <div class="doc-subtitle">End-to-end breakdown of the current BookGuard referring agent program. Compiled as the starting point for a custom replacement system built into HomeHub.</div>
+      <div class="meta-row">
+        <span class="meta-pill">Compiled Jun 2026</span>
+        <span class="meta-pill">Current platform: GoHighLevel</span>
+        <span class="meta-pill">Internal operator: Kyle Bridges</span>
+        <span class="meta-pill">WellSnax / Insurance Specialties</span>
+      </div>
+    </div>
+
+    <section id="overview">
+      <h2>System Overview</h2><div class="section-rule"></div>
+      <p>BookGuard is a referring agent program operated by Insurance Specialties / WellSnax. Outside insurance agents refer clients to Insurance Specialties for products those agents are not licensed to sell &mdash; health, Medicare, life, and similar. Insurance Specialties handles the sale, and the referring agent earns a commission. The program gives outside agents a meaningful additional revenue stream without requiring them to expand their own licensing.</p>
+      <p>The system currently runs across <strong style="color:var(--text)">two separate platforms</strong> that are not integrated with each other. <strong style="color:var(--text)">GoHighLevel (GHL)</strong> handles CRM, automation, referral intake, and pipeline management. <strong style="color:var(--text)">Business HQ</strong> (<code>app.businesshq.pro</code>) provides an agent-facing dashboard for referral tracking and commission visibility. There is no custom software. Everything is platform configuration layered over a largely manual process, and the two platforms do not share data.</p>
+      <div class="callout callout-amber"><strong>Context for developers</strong>The current system breaks frequently. The goal of the HomeHub integration is to replace this GHL setup with a proper custom-built solution that eliminates manual overhead, fixes automation gaps, and gives referring agents real visibility into their referrals.</div>
+      <h3>Stack at a glance</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Current Tool</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>CRM / Automations</td><td>GoHighLevel (GHL)</td><td>Hosted and supported by Convirs</td></tr>
+          <tr><td>Landing Pages</td><td>GHL Funnels</td><td>bookguard.com pointed at GHL pages</td></tr>
+          <tr><td>Intake Forms</td><td>GHL Forms</td><td>One per agent campaign</td></tr>
+          <tr><td>Domain</td><td>GoDaddy &mdash; bookguard.com</td><td>DNS managed by Convirs</td></tr>
+          <tr><td>Email Notifications</td><td>GHL Workflows</td><td>~5 min delay; historically went to spam</td></tr>
+          <tr><td>Agent Commissions</td><td>External / manual</td><td>Set to $0 in GHL; handled outside the system</td></tr>
+          <tr><td>Agent Dashboard</td><td>Business HQ (app.businesshq.pro)</td><td>Exists but agent onboarding process was never formalized &mdash; largely unused</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="workflow">
+      <h2>End-to-End Workflow</h2><div class="section-rule"></div>
+      <p>The current process has 8 phases. Each phase involves some degree of manual action. There is no step that is fully automated without a human trigger somewhere in the chain.</p>
+      <ul class="phase-list">
+        <li class="phase"><div class="phase-num">1</div><div class="phase-body">
+          <div class="phase-title">Agent Relationship and Agreement</div>
+          <div class="phase-desc">Referring agent relationships are initiated through a variety of channels. Team members may connect with agents at conferences, through existing networks, or via direct outreach, and walk them through the benefits of joining BookGuard. The core value proposition for the referring agent is a trusted partner who can handle insurance products they are not licensed to sell, with a commission paid for each successfully placed referral.<br><br>Once an agent decides to move forward, a BookGuard-specific referral agreement is sent for signature. This agreement exists alongside any prior commission arrangement and addresses the specifics of how BookGuard referrals are executed and compensated. The agreement may be sent by any team member coordinating the relationship. The signed document is stored and the agent is handed off for technical setup.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">2</div><div class="phase-body">
+          <div class="phase-title">Agent Onboarding</div>
+          <div class="phase-desc">The agent is sent to <code>bookguard.com/referring-agent</code> to complete the onboarding form. Submission auto-adds them to GHL Contacts. The entry is manually verified and the agent is assigned to a Campaign.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">3</div><div class="phase-body">
+          <div class="phase-title">Custom Landing Page Setup</div>
+          <div class="phase-desc">A custom funnel step is created in GHL, cloned from the master template, and customized with the agent's photo, name, phone, email, and website. Each agent gets their own dedicated page, which is then published.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">4</div><div class="phase-body">
+          <div class="phase-title">Campaign Setup</div>
+          <div class="phase-desc">A new Campaign is created in GHL Marketing, named after the agent, linked to their custom funnel step, and published. Agent commissions are set to $0 in GHL since payouts are handled externally. If the agent is not yet in the Referring Agents list, they must be added manually before the campaign can go live.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">5</div><div class="phase-body">
+          <div class="phase-title">Unique URL Generation</div>
+          <div class="phase-desc">The agent's unique referral URL is copied from the campaign. Format: <code>https://lead.bookguard.com/[campaign]?am_id=[agent ID]</code>. The Referring Agent Review Link on the agent's GHL contact card must be manually verified to have populated correctly before anything else can proceed.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">6</div><div class="phase-body">
+          <div class="phase-title">Send Agent Their Materials</div>
+          <div class="phase-desc">The agent receives their unique landing page URL and a printed QR code for display in their office. The instruction to the agent is simple: when a client needs products you do not write, send them here.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">7</div><div class="phase-body">
+          <div class="phase-title">Referral Intake</div>
+          <div class="phase-desc">The client visits the agent's landing page and submits the intake form. GHL creates a new Contact record. After approximately 5 minutes, an email notification fires to the ops team. An Opportunity record is created and enters the active pipeline for Insurance Specialties to follow up.</div>
+        </div></li>
+        <li class="phase"><div class="phase-num">8</div><div class="phase-body">
+          <div class="phase-title">Manual Cleanup (When Automations Fail)</div>
+          <div class="phase-desc">When a contact lands in GHL without triggering the automation, the referring agent fields must be filled in manually, an Opportunity record created by hand, and the workflow triggered manually. This is not a rare edge case. It is a recurring part of operating the current system.</div>
+        </div></li>
+      </ul>
+    </section>
+
+    <section id="automations">
+      <h2>Automations</h2><div class="section-rule"></div>
+      <div class="callout callout-red"><strong>Critical limitation</strong>Each referring agent campaign requires its own individually configured automation trigger. Only one campaign trigger can be set up at a time. Every new agent added to the program requires returning to the Automations screen and manually adding a new trigger. If this step is missed or the UI changes break the process, leads arrive silently with no notification and no pipeline entry.</div>
+      <h3>How triggers work</h3>
+      <p>Each campaign uses a <code>Lead Created</code> trigger filtered by campaign name. Once the trigger fires, the notification email goes to the ops team and the Opportunity record is created. If the trigger was not configured before the lead came in, the lead goes to Contacts with no pipeline association and no notification. Nothing in the system flags that this happened.</p>
+      <h3>Known behavior issues</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Issue</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Notification emails going to spam</td><td><span class="badge badge-amber">Resolved &mdash; required whitelisting</span></td></tr>
+          <tr><td>~5 minute delay on notification emails</td><td><span class="badge badge-red">Ongoing &mdash; by design in GHL</span></td></tr>
+          <tr><td>Leads falling into Contacts without triggering automations</td><td><span class="badge badge-red">Ongoing &mdash; requires manual cleanup</span></td></tr>
+          <tr><td>GHL UI changes breaking documented setup steps</td><td><span class="badge badge-red">Ongoing &mdash; menus differ from documented process</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="forms">
+      <h2>Forms &amp; Data Collection</h2><div class="section-rule"></div>
+      <p>Two forms exist in the current system.</p>
+      <h3>Agent Onboarding Form</h3>
+      <p>Located at <code>bookguard.com/referring-agent</code>. Collects agent info for registration. Submission adds the agent to GHL Contacts.</p>
+      <h3>Client Referral Intake Form</h3>
+      <p>Embedded on each agent's custom landing page. Captures the following:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Client name</td><td></td></tr>
+          <tr><td>Phone</td><td></td></tr>
+          <tr><td>Email</td><td></td></tr>
+          <tr><td>Insurance product interest</td><td>Health, Medicare, etc.</td></tr>
+          <tr><td>Life insurance interest</td><td>Checkbox field added in a later update</td></tr>
+          <tr><td>Referring agent attribution</td><td>Captured via URL parameter only &mdash; not a form field</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout callout-amber"><strong>Attribution is URL-based, not form-based</strong>The referring agent is identified by the <code>am_id</code> parameter in the URL. If the client navigates to the page without the correct URL, or if the agent shares the wrong link, the referral lands in Contacts with no campaign association and no automatic way to determine the source.</div>
+    </section>
+
+    <section id="tech">
+      <h2>Technical Stack</h2><div class="section-rule"></div>
+      <h3>What's running on GHL</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Item</th><th>Count</th></tr></thead>
+        <tbody>
+          <tr><td>Master funnel template</td><td>1</td></tr>
+          <tr><td>Custom funnel steps (one per agent)</td><td>N &mdash; scales with agent count</td></tr>
+          <tr><td>Campaigns (one per agent)</td><td>N</td></tr>
+          <tr><td>Automation triggers (one per campaign)</td><td>N &mdash; each configured individually</td></tr>
+          <tr><td>Custom form template</td><td>1</td></tr>
+          <tr><td>Contact database with Referring Agent Review Link field</td><td>1</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="domain">
+      <h2>Domain Configuration</h2><div class="section-rule"></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Domain</td><td>bookguard.com</td></tr>
+          <tr><td>Registrar</td><td>GoDaddy</td></tr>
+          <tr><td>DNS Managed By</td><td>Convirs via GoDaddy Delegated Access</td></tr>
+          <tr><td>Delegated Access Level</td><td>Access Domains Only</td></tr>
+          <tr><td>GHL Integration</td><td>Landing pages hosted on GHL, pointed at subdomains</td></tr>
+          <tr><td>Referral URL format</td><td><code>https://lead.bookguard.com/[campaign]?am_id=[agent ID]</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="pain">
+      <h2>Pain Points</h2><div class="section-rule"></div>
+      <p>These are documented, recurring failures in the current system. A critical characteristic of most of these issues is that they fail silently. No error is surfaced, no alert fires. Something simply does not happen, and no one knows until they go looking manually.</p>
+      <div class="pain-grid">
+        <div class="pain-card"><div class="label">Reliability</div><p>Referrals fall into Contacts instead of triggering automations. This has happened with multiple confirmed submissions. The lead exists in the system but never enters the pipeline and no one is notified.</p></div>
+        <div class="pain-card"><div class="label">Reliability</div><p>Notification emails go to spam. Took multiple days to detect and resolve. The issue can recur with any new recipient added to the notification list.</p></div>
+        <div class="pain-card"><div class="label">Attribution</div><p>There is no reliable way to identify which agent sent a referral without manually checking. Ops staff confirmed during internal testing they could not determine the source from the notification alone.</p></div>
+        <div class="pain-card"><div class="label">Attribution</div><p>If an agent shares the wrong link or a client navigates directly to the page, the referral has no campaign association and cannot be traced back to the agent automatically.</p></div>
+        <div class="pain-card"><div class="label">Process</div><p>Every new agent requires 5 or more manual steps across GHL: funnel step, campaign, automation trigger, URL verification, and materials distribution. There is no shortcut.</p></div>
+        <div class="pain-card"><div class="label">Process</div><p>When a lead misses the pipeline, manual cleanup is required for every field. No automatic recovery exists. An operator must locate the contact, fill in agent fields, create an Opportunity, and manually trigger the workflow.</p></div>
+        <div class="pain-card"><div class="label">Agent Experience</div><p>An agent-facing dashboard exists in Business HQ, but no one documented how agents are set up on it or how to access it. As a result it goes largely unused. Agents still rely on manual updates for any information about their referrals.</p></div>
+        <div class="pain-card"><div class="label">Infrastructure</div><p>GHL UI changes have already broken the documented setup process. The step-by-step instructions no longer match the current interface, which increases setup errors and onboarding time.</p></div>
+      </div>
+    </section>
+
+    <section id="gaps">
+      <h2>What's Not in Place</h2><div class="section-rule"></div>
+      <p>These capabilities do not exist in the current GHL system and represent the target build scope for the HomeHub integration.</p>
+      <ul class="missing-list">
+        <li>Automated agent notifications when a referral submits, is contacted, or converts</li>
+        <li>Agent-facing portal with real-time referral status tracking &mdash; a dashboard exists in Business HQ but has no documented onboarding process and agents are not routinely told how to access it; proper implementation is missing</li>
+        <li>Reporting on referral volume, conversion rate, and source attribution</li>
+        <li>Referral source attribution visible to non-admin users</li>
+        <li>Automatic submission confirmation sent to the referring agent</li>
+        <li>Automated onboarding flow for new agents replacing the current multi-step manual GHL process</li>
+        <li>Duplicate lead detection and prevention</li>
+        <li>Self-configuring automation triggers that do not require per-agent manual setup</li>
+      </ul>
+      <div class="callout callout-blue"><strong>Build directive</strong>A dashboard exists in Business HQ but is disconnected from GHL and has never been properly rolled out to agents. The HomeHub replacement should handle all agent onboarding, referral intake, attribution, notification, and status tracking without requiring manual intervention at any step &mdash; and should provide agents with a clear, documented path to accessing their dashboard from day one. Consolidate what currently lives across two unconnected platforms into one coherent system.</div>
+    </section>
+
+    <section id="issues">
+      <h2>Known System Issues</h2><div class="section-rule"></div>
+      <p>The following are documented failure patterns observed during operation of the current system. They are listed generically to illustrate the types of problems the HomeHub build should resolve.</p>
+      <ul class="issues-list">
+        <li><span class="issue-tag issue-tag-red">Open</span><div class="issue-body"><strong>Referral submitted but never entered the pipeline</strong>A client completed and submitted the intake form. The contact was created in GHL but the automation trigger did not fire. No notification was sent and no Opportunity was created. The referral was only discovered through manual follow-up. This pattern has occurred more than once.</div></li>
+        <li><span class="issue-tag issue-tag-red">Open</span><div class="issue-body"><strong>Referral source could not be identified after submission</strong>A referral entered the system but attribution to the originating agent was unclear. Ops staff confirmed they could not determine the source from the notification they received. The attribution was only resolvable by an admin examining the contact record directly.</div></li>
+        <li><span class="issue-tag issue-tag-amber">Resolved</span><div class="issue-body"><strong>Ops notification emails routed to spam</strong>Notification emails generated by GHL were delivered to spam for multiple days before the issue was identified. Resolution required manually whitelisting the sending domain. This could recur if the sending configuration changes or new recipients are added.</div></li>
+        <li><span class="issue-tag issue-tag-red">Open</span><div class="issue-body"><strong>Duplicate contact record with no clear source</strong>A contact appeared in the system as a duplicate entry with no identifiable campaign association or referral source. No automation had fired and the origin of the record could not be determined.</div></li>
+        <li><span class="issue-tag issue-tag-red">Open</span><div class="issue-body"><strong>Agent dashboard exists but has never been properly implemented</strong>Business HQ (<code>app.businesshq.pro</code>) provides an agent-facing dashboard that shows referral counts and is designed to support commission tracking. However, no onboarding process was ever documented or communicated to referring agents. Agents are not told how to access it, and the dashboard has not been incorporated into any setup or handoff workflow. The platform exists in isolation from GHL and is effectively unused.</div></li>
+        <li><span class="issue-tag issue-tag-red">Open</span><div class="issue-body"><strong>Documented setup process no longer matches GHL interface</strong>The step-by-step setup documentation no longer aligns with the current GHL interface. Menu locations and workflow options have changed, making the documented process unreliable for onboarding new agents without additional troubleshooting.</div></li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
